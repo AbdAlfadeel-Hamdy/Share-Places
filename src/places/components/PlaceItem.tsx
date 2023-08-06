@@ -2,10 +2,11 @@ import React, { useState } from "react";
 
 import { Place } from "../../store";
 import Card from "../../shared/components/UIElements/Card";
-
-import styles from "./PlaceItem.module.css";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
+import Map from "./Map";
+
+import styles from "./PlaceItem.module.css";
 
 interface PlaceItemProps {
   place: Place;
@@ -31,7 +32,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
         footerClass={styles["place-item__modal-actions"]}
       >
         <div className={styles["map-container"]}>
-          <h2>Map Container</h2>
+          <Map coordinates={place.location} zoom={7} />
         </div>
       </Modal>
       <li className={styles["place-item"]}>
