@@ -45,7 +45,9 @@
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
     "@reduxjs/toolkit": "^1.9.5",
+    "@types/react-transition-group": "^4.4.6",
     "react-router-dom": "^6.14.2",
+    "react-transition-group": "^4.4.5",
     "typescript-plugin-css-modules": "^5.0.1"
   }
 }
