@@ -4,30 +4,34 @@ import { InputActionKind, inputReducer } from "./input-reducer";
 
 export interface InputProps {
   id: string;
-  title: string;
+  label: string;
   type?: string;
   elementType: "input" | "textarea";
   placeholder?: string;
   rows?: number;
-  errorMsg?: string;
-  validators?: { type: string; val?: number }[];
+  errorMsg: string;
+  validators: { type: string; val?: number }[];
   onChange: (id: string, value: string, isValid: boolean) => void;
+  value?: string;
+  valid?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
   elementType,
   id,
-  title,
+  label,
   type,
   placeholder,
   rows,
   errorMsg,
   validators,
   onChange,
+  value,
+  valid,
 }) => {
   const [state, dispatch] = useReducer(inputReducer, {
-    value: "",
-    isValid: false,
+    value: value || "",
+    isValid: valid || false,
     isTouched: false,
   });
 
@@ -77,7 +81,7 @@ const Input: React.FC<InputProps> = ({
           : ""
       }`}
     >
-      <label htmlFor={id}>{title}</label>
+      <label htmlFor={id}>{label}</label>
       {element}
       {!state.isValid && state.isTouched && <p>{errorMsg}</p>}
     </div>

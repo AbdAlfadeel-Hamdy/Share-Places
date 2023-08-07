@@ -57,6 +57,14 @@ const NewPlace: React.FC = () => {
         value: "",
         isValid: false,
       },
+      description: {
+        value: "",
+        isValid: false,
+      },
+      address: {
+        value: "",
+        isValid: false,
+      },
     },
     isValid: false,
   });
@@ -80,7 +88,7 @@ const NewPlace: React.FC = () => {
         id="title"
         elementType="input"
         type="text"
-        title="Title"
+        label="Title"
         validators={[VALIDATOR_REQUIRE()]}
         errorMsg="Please enter a valid title."
         onChange={inputChangeHandler}
@@ -88,7 +96,7 @@ const NewPlace: React.FC = () => {
       <Input
         id="description"
         elementType="textarea"
-        title="Description"
+        label="Description"
         validators={[VALIDATOR_MINLENGTH(5)]}
         errorMsg="Please enter a valid description (at least 5 charachters)."
         onChange={inputChangeHandler}
@@ -97,7 +105,7 @@ const NewPlace: React.FC = () => {
         id="address"
         elementType="input"
         type="text"
-        title="Address"
+        label="Address"
         validators={[VALIDATOR_REQUIRE()]}
         errorMsg="Please enter a valid address."
         onChange={inputChangeHandler}
