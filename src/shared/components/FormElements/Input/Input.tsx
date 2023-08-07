@@ -12,8 +12,8 @@ export interface InputProps {
   errorMsg: string;
   validators: { type: string; val?: number }[];
   onChange: (id: string, value: string, isValid: boolean) => void;
-  value?: string;
-  valid?: boolean;
+  initialValue?: string;
+  initialValid?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -26,12 +26,12 @@ const Input: React.FC<InputProps> = ({
   errorMsg,
   validators,
   onChange,
-  value,
-  valid,
+  initialValue,
+  initialValid,
 }) => {
   const [state, dispatch] = useReducer(inputReducer, {
-    value: value || "",
-    isValid: valid || false,
+    value: initialValue || "",
+    isValid: initialValid || false,
     isTouched: false,
   });
 
