@@ -11,7 +11,7 @@ interface ButtonProps {
   inverse?: boolean;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
-  onClick?: () => void;
+  onClick?: (e?: any) => void;
 }
 
 const Button: React.FC<ButtonProps> = ({
