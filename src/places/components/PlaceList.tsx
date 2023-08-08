@@ -5,6 +5,7 @@ import PlaceItem from "./PlaceItem";
 
 import styles from "./PlaceList.module.css";
 import { useParams } from "react-router-dom";
+import Button from "../../shared/components/FormElements/Button";
 
 const places: Place[] = [
   {
@@ -20,7 +21,7 @@ const places: Place[] = [
     },
   },
   {
-    id: 1,
+    id: 2,
     title: faker.word.noun(),
     imgUrl: faker.image.avatar(),
     address: faker.location.country(),
@@ -46,7 +47,7 @@ const PlaceList: React.FC<PlaceListProps> = () => {
       <div className={`${styles["place-list"]} center`}>
         <Card>
           <h2>No laces found. Maybe create One?</h2>
-          <button>Share Place</button>
+          <Button to="/places/new">Share Place</Button>
         </Card>
       </div>
     );

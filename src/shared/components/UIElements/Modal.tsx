@@ -8,7 +8,7 @@ import Backdrop from "./Backdrop";
 
 interface ModalOverlayProps {
   show: boolean;
-  onClick?: () => void;
+  onClose?: () => void;
   style?: React.CSSProperties;
   onSubmit?: () => void;
   className?: string;
@@ -49,7 +49,7 @@ const ModalOverlay: React.FC<ModalOverlayProps> = ({
 const Modal: React.FC<ModalOverlayProps> = ({ ...props }) => {
   return (
     <React.Fragment>
-      {props.show && <Backdrop onClick={props.onClick} />}
+      {props.show && <Backdrop onClick={props.onClose} />}
       <CSSTransition
         in={props.show}
         timeout={200}

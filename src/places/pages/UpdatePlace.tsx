@@ -10,6 +10,7 @@ import {
 } from "../../shared/utils/validators";
 import useForm from "../../shared/hooks/form-hook";
 import styles from "./PlaceForm.module.css";
+import Card from "../../shared/components/UIElements/Card";
 
 const places: Place[] = [
   {
@@ -25,7 +26,7 @@ const places: Place[] = [
     },
   },
   {
-    id: 1,
+    id: 2,
     title: faker.word.noun(),
     imgUrl: faker.image.avatar(),
     address: faker.location.country(),
@@ -60,26 +61,29 @@ const UpdatePlace: React.FC = () => {
   if (placeId) foundPlace = places.find((place) => place.id === +placeId);
 
   useEffect(() => {
-    setFormData({
-      inputs: {
-        title: {
-          value: foundPlace?.title!,
-          isValid: true,
+    if (foundPlace)
+      setFormData({
+        inputs: {
+          title: {
+            value: foundPlace.title,
+            isValid: true,
+          },
+          description: {
+            value: foundPlace.description,
+            isValid: true,
+          },
         },
-        description: {
-          value: foundPlace?.description!,
-          isValid: true,
-        },
-      },
-      isValid: true,
-    });
+        isValid: true,
+      });
     setIsLoading(false);
   }, [setFormData, foundPlace]);
 
   if (!foundPlace || isLaoding)
     return (
       <div className="center">
-        <h2>Could not find place!</h2>
+        <Card>
+          <h2>Could not find place!</h2>
+        </Card>
       </div>
     );
 

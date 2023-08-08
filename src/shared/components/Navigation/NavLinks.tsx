@@ -9,13 +9,13 @@ const NavLinks: React.FC = () => {
         <NavLink to="/">ALL USERS</NavLink>
       </li>
       <li>
-        <NavLink to="/u1/places">MY PLACES</NavLink>
+        <NavLink to="/1/places">MY PLACES</NavLink>
       </li>
       <li>
         <NavLink to="/places/new">ADD PLACE</NavLink>
       </li>
       <li>
-        <NavLink to="/">AUTHENTICATE</NavLink>
+        <NavLink to="/auth">AUTHENTICATE</NavLink>
       </li>
     </ul>
   );
