@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import axios, { AxiosError } from "axios";
 
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input/Input";
@@ -12,6 +13,8 @@ import {
 
 import styles from "./Auth.module.css";
 import AuthContext from "../../shared/context/auth-context";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 
 const Auth: React.FC = () => {
   const { login } = useContext(AuthContext);
@@ -29,6 +32,8 @@ const Auth: React.FC = () => {
     },
     isValid: false,
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const switchModeHandler = () => {
     if (!isLoginMode) {
@@ -48,14 +53,45 @@ const Auth: React.FC = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
 
-  const submitFormHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitFormHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(state.inputs);
-    login();
+    try {
+      setIsLoading(true);
+      setError(null);
+      if (!isLoginMode) {
+        const user = await axios.post(
+          "/users/signup",
+          {
+            name: state.inputs.name.value,
+            email: state.inputs.email.value,
+            password: state.inputs.password.value,
+          },
+          {
+            baseURL: process.env.REACT_APP_BASE_URL,
+            withCredentials: true,
+          }
+        );
+      } else {
+      }
+      setIsLoading(false);
+      login();
+    } catch (err: Error | AxiosError | unknown) {
+      setIsLoading(false);
+      if (axios.isAxiosError(err))
+        setError(err.response?.data.message || "Something went wrong!");
+      else if (err instanceof Error)
+        setError(err.message || "Something went wrong!");
+    }
+  };
+
+  const clearErrorHandler = () => {
+    setError(null);
   };
 
   return (
     <Card className={styles.authentication}>
+      {isLoading && <LoadingSpinner asOverlay />}
+      {error && <ErrorModal error={error} onClear={clearErrorHandler} />}
       <h2>Login Required</h2>
       <hr />
       <form onSubmit={submitFormHandler}>
@@ -85,8 +121,8 @@ const Auth: React.FC = () => {
           elementType="input"
           type="password"
           onChange={changeInputHandler}
-          errorMsg="Please enter a valid password (at least 8 characters)."
-          validators={[VALIDATOR_MINLENGTH(8)]}
+          errorMsg="Please enter a valid password (at least 6 characters)."
+          validators={[VALIDATOR_MINLENGTH(6)]}
         />
         <Button type="submit" disabled={!state.isValid}>
           {isLoginMode ? "LOGIN" : "SIGNUP"}
