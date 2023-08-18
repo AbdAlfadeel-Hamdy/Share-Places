@@ -1,30 +1,53 @@
+import { useState } from "react";
 import Card from "../../shared/components/UIElements/Card";
-import { User } from "../../store";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import { User, useFetchUsersQuery } from "../../store";
 import UserItem from "./UserItem";
-import { faker } from "@faker-js/faker";
 
 import styles from "./UserList.module.css";
 
-const USERS: User[] = [
-  {
-    id: 1,
-    name: "hoss",
-    image: faker.image.avatar(),
-    placeCount: 5,
-  },
-];
-
 const UserList: React.FC = () => {
+  const { isFetching, data, error } = useFetchUsersQuery(
+    {},
+    { refetchOnMountOrArgChange: true, refetchOnReconnect: true }
+  );
+  const [errorModalIsOpen, setErrorModalIsOpen] = useState(!!error);
+
   let content;
-  if (!USERS.length)
+  if (isFetching)
+    content = (
+      <div className="center">
+        <LoadingSpinner />
+      </div>
+    );
+  else if (error)
+    content = (
+      <>
+        {errorModalIsOpen && (
+          <ErrorModal
+            error={
+              (error as { status: number; data: { message: string } }).data
+                .message
+            }
+            onClear={() => setErrorModalIsOpen(false)}
+          />
+        )}
+      </>
+    );
+  else if (!data.users.length)
     content = (
       <div className="center">
         <Card>
-          <h2>No Users</h2>
+          <h2>No Users Found.</h2>
         </Card>
       </div>
     );
-  else content = USERS.map((user) => <UserItem key={user.id} user={user} />);
+  else
+    content = data.users.map((user: User) => (
+      <UserItem key={user.id} user={user} />
+    ));
+
   return <ul className={styles["users-list"]}>{content}</ul>;
 };
 

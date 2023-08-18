@@ -1,17 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BASE_URL } from "../../utils/constants";
 
 export interface User {
   id: number;
   name: string;
   image: string;
-  placeCount: number;
+  places: string[];
 }
 
 export const usersApi = createApi({
   reducerPath: "users",
   baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
+    baseUrl: process.env.REACT_APP_BASE_URL,
+    credentials: "include",
   }),
   endpoints(builder) {
     return {
@@ -19,7 +19,7 @@ export const usersApi = createApi({
         query: () => {
           return {
             method: "GET",
-            url: "/",
+            url: "/users",
           };
         },
       }),

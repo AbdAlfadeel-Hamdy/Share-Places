@@ -72,6 +72,17 @@ const Auth: React.FC = () => {
           }
         );
       } else {
+        const user = await axios.post(
+          "/users/login",
+          {
+            email: state.inputs.email.value,
+            password: state.inputs.password.value,
+          },
+          {
+            baseURL: process.env.REACT_APP_BASE_URL,
+            withCredentials: true,
+          }
+        );
       }
       setIsLoading(false);
       login();

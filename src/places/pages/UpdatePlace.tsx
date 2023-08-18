@@ -14,24 +14,24 @@ import Card from "../../shared/components/UIElements/Card";
 
 const places: Place[] = [
   {
-    id: 1,
+    id: "1",
     title: faker.word.noun(),
-    imgUrl: faker.image.avatar(),
+    image: faker.image.avatar(),
     address: faker.location.country(),
     description: faker.animal.bird(),
-    creator: faker.number.int(),
+    creator: "5",
     location: {
       lat: faker.location.latitude(),
       lng: faker.location.longitude(),
     },
   },
   {
-    id: 2,
+    id: "2",
     title: faker.word.noun(),
-    imgUrl: faker.image.avatar(),
+    image: faker.image.avatar(),
     address: faker.location.country(),
     description: faker.animal.bird(),
-    creator: faker.number.int(),
+    creator: "faker.number.int()",
     location: {
       lat: faker.location.latitude(),
       lng: faker.location.longitude(),
@@ -58,7 +58,7 @@ const UpdatePlace: React.FC = () => {
   });
 
   let foundPlace: Place | undefined;
-  if (placeId) foundPlace = places.find((place) => place.id === +placeId);
+  if (placeId) foundPlace = places.find((place) => place.id === placeId);
 
   useEffect(() => {
     if (foundPlace)

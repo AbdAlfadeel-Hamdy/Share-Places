@@ -7,6 +7,8 @@ import UpdatePlace from "./places/pages/UpdatePlace";
 import Auth from "./users/pages/Auth";
 import AuthContext from "./shared/context/auth-context";
 import { useCallback, useState } from "react";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -42,12 +44,14 @@ const App: React.FC = () => {
       </Routes>
     );
   return (
-    <AuthContext.Provider value={value}>
-      <BrowserRouter>
-        <MainNavigation />
-        <main>{routes}</main>
-      </BrowserRouter>
-    </AuthContext.Provider>
+    <Provider store={store}>
+      <AuthContext.Provider value={value}>
+        <BrowserRouter>
+          <MainNavigation />
+          <main>{routes}</main>
+        </BrowserRouter>
+      </AuthContext.Provider>
+    </Provider>
   );
 };
 

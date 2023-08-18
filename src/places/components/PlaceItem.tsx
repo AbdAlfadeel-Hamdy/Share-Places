@@ -14,6 +14,7 @@ interface PlaceItemProps {
 }
 
 const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
+  console.log(place);
   const { isLoggedIn } = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmodal, setShowDeleteModal] = useState(false);
@@ -71,7 +72,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
       <li className={styles["place-item"]}>
         <Card className={styles["place-item__content"]}>
           <div className={styles["place-item__image"]}>
-            <img src={place.imgUrl} alt={place.title} />
+            <img src={place.image} alt={place.title} />
           </div>
           <div className={styles["place-item__info"]}>
             <h2>{place.title}</h2>

@@ -1,38 +1,14 @@
-import { faker } from "@faker-js/faker";
-import Card from "../../shared/components/UIElements/Card";
-import { Place } from "../../store";
-import PlaceItem from "./PlaceItem";
+import { useState } from "react";
 
-import styles from "./PlaceList.module.css";
+import Card from "../../shared/components/UIElements/Card";
+import { Place, useFetchPlacesQuery } from "../../store";
+import PlaceItem from "./PlaceItem";
 import { useParams } from "react-router-dom";
 import Button from "../../shared/components/FormElements/Button";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 
-const places: Place[] = [
-  {
-    id: 1,
-    title: faker.word.noun(),
-    imgUrl: faker.image.avatar(),
-    address: faker.location.country(),
-    description: faker.animal.bird(),
-    creator: faker.number.int(),
-    location: {
-      lat: faker.location.latitude(),
-      lng: faker.location.longitude(),
-    },
-  },
-  {
-    id: 2,
-    title: faker.word.noun(),
-    imgUrl: faker.image.avatar(),
-    address: faker.location.country(),
-    description: faker.animal.bird(),
-    creator: faker.number.int(),
-    location: {
-      lat: faker.location.latitude(),
-      lng: faker.location.longitude(),
-    },
-  },
-];
+import styles from "./PlaceList.module.css";
 
 interface PlaceListProps {
   userId?: number;
@@ -40,9 +16,31 @@ interface PlaceListProps {
 
 const PlaceList: React.FC<PlaceListProps> = () => {
   const { userId } = useParams();
+  const { isFetching, data, error, isError } = useFetchPlacesQuery(userId);
+  const [errorModalIsOpen, setErrorModalIsOpen] = useState(isError);
 
   let content;
-  if (!places.length)
+  if (isFetching)
+    content = (
+      <div className="center">
+        <LoadingSpinner />
+      </div>
+    );
+  else if (error)
+    content = content = (
+      <>
+        {errorModalIsOpen && (
+          <ErrorModal
+            error={
+              (error as { status: number; data: { message: string } }).data
+                .message
+            }
+            onClear={() => setErrorModalIsOpen(false)}
+          />
+        )}
+      </>
+    );
+  else if (!data || !data.places.length)
     content = (
       <div className={`${styles["place-list"]} center`}>
         <Card>
@@ -51,11 +49,9 @@ const PlaceList: React.FC<PlaceListProps> = () => {
         </Card>
       </div>
     );
-  if (places.length)
-    content = places.map((place) => {
-      return place.id === +userId! ? (
-        <PlaceItem key={place.id} place={place} />
-      ) : null;
+  else
+    content = data.places.map((place: Place) => {
+      return <PlaceItem key={place.id} place={place} />;
     });
   return <ul className={styles["place-list"]}>{content}</ul>;
 };

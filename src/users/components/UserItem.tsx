@@ -19,7 +19,8 @@ const UserItem: React.FC<UserItemProps> = ({ user }) => {
           <div className={styles["user-item__info"]}>
             <h2>{user.name}</h2>
             <h3>
-              {user.placeCount} {user.placeCount === 1 ? "Place" : "Places"}
+              {user.places.length}{" "}
+              {user.places.length === 1 ? "Place" : "Places"}
             </h3>
           </div>
         </Link>
