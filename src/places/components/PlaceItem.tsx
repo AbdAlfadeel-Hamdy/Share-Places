@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { Place } from "../../store";
+import { Place, useDeletePlaceMutation } from "../../store";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
@@ -8,16 +8,18 @@ import Map from "./Map";
 
 import styles from "./PlaceItem.module.css";
 import AuthContext from "../../shared/context/auth-context";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 interface PlaceItemProps {
   place: Place;
 }
 
 const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
-  console.log(place);
-  const { isLoggedIn } = useContext(AuthContext);
+  const { loggedInUser } = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmodal, setShowDeleteModal] = useState(false);
+  const [deletePlace, deletePlaceResult] = useDeletePlaceMutation();
+
   const showMapHandler = () => {
     setShowMap(true);
   };
@@ -31,13 +33,14 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
   const cancelDeleteHandler = () => {
     setShowDeleteModal(false);
   };
-  const confirmDeleteHandler = () => {
-    console.log("submit");
+  const confirmDeleteHandler = async () => {
     setShowDeleteModal(false);
+    await deletePlace(place.id);
   };
 
   return (
     <React.Fragment>
+      {deletePlaceResult.isLoading && <LoadingSpinner asOverlay />}
       <Modal
         show={showMap}
         onClose={closeMapHandler}
@@ -83,8 +86,10 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
             <Button inverse onClick={showMapHandler}>
               VIEW ON MAP
             </Button>
-            {isLoggedIn && <Button to={`/places/${place.id}`}>EDIT</Button>}
-            {isLoggedIn && (
+            {loggedInUser?.id === place.creator && (
+              <Button to={`/places/${place.id}`}>EDIT</Button>
+            )}
+            {loggedInUser?.id === place.creator && (
               <Button danger onClick={showdeleteWarninghandler}>
                 DELETE
               </Button>

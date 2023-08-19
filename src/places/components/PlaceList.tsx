@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Card from "../../shared/components/UIElements/Card";
 import { Place, useFetchPlacesQuery } from "../../store";
@@ -19,6 +19,10 @@ const PlaceList: React.FC<PlaceListProps> = () => {
   const { isFetching, data, error, isError } = useFetchPlacesQuery(userId);
   const [errorModalIsOpen, setErrorModalIsOpen] = useState(isError);
 
+  useEffect(() => {
+    setErrorModalIsOpen(isError);
+  }, [isError]);
+
   let content;
   if (isFetching)
     content = (
@@ -27,7 +31,7 @@ const PlaceList: React.FC<PlaceListProps> = () => {
       </div>
     );
   else if (error)
-    content = content = (
+    content = (
       <>
         {errorModalIsOpen && (
           <ErrorModal
@@ -40,11 +44,11 @@ const PlaceList: React.FC<PlaceListProps> = () => {
         )}
       </>
     );
-  else if (!data || !data.places.length)
+  else if (!data.places.length)
     content = (
       <div className={`${styles["place-list"]} center`}>
         <Card>
-          <h2>No laces found. Maybe create One?</h2>
+          <h2>No places found. Maybe create One?</h2>
           <Button to="/places/new">Share Place</Button>
         </Card>
       </div>
@@ -53,6 +57,7 @@ const PlaceList: React.FC<PlaceListProps> = () => {
     content = data.places.map((place: Place) => {
       return <PlaceItem key={place.id} place={place} />;
     });
+
   return <ul className={styles["place-list"]}>{content}</ul>;
 };
 

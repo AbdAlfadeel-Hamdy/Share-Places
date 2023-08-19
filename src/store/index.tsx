@@ -18,4 +18,10 @@ setupListeners(store.dispatch);
 
 export type { User, Place };
 export { useFetchUsersQuery } from "./apis/usersApi";
-export { useFetchPlacesQuery } from "./apis/placesApi";
+export {
+  useFetchPlacesQuery,
+  useFetchPlaceQuery,
+  useAddPlaceMutation,
+  useDeletePlaceMutation,
+  useUpdatePlaceMutation,
+} from "./apis/placesApi";

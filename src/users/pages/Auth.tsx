@@ -58,8 +58,9 @@ const Auth: React.FC = () => {
     try {
       setIsLoading(true);
       setError(null);
+      let response;
       if (!isLoginMode) {
-        const user = await axios.post(
+        response = await axios.post(
           "/users/signup",
           {
             name: state.inputs.name.value,
@@ -72,7 +73,7 @@ const Auth: React.FC = () => {
           }
         );
       } else {
-        const user = await axios.post(
+        response = await axios.post(
           "/users/login",
           {
             email: state.inputs.email.value,
@@ -85,7 +86,8 @@ const Auth: React.FC = () => {
         );
       }
       setIsLoading(false);
-      login();
+      const { user } = response.data;
+      login(user);
     } catch (err: Error | AxiosError | unknown) {
       setIsLoading(false);
       if (axios.isAxiosError(err))

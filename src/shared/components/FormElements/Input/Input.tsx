@@ -14,6 +14,7 @@ export interface InputProps {
   onChange: (id: string, value: string, isValid: boolean) => void;
   initialValue?: string;
   initialValid?: boolean;
+  formValue?: string;
 }
 
 const Input: React.FC<InputProps> = ({

@@ -8,23 +8,23 @@ import Auth from "./users/pages/Auth";
 import AuthContext from "./shared/context/auth-context";
 import { useCallback, useState } from "react";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { User, store } from "./store";
 
 const App: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const loginHandler = useCallback(() => {
-    setIsLoggedIn(true);
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const loginHandler = useCallback((user: User) => {
+    setLoggedInUser(user);
   }, []);
   const logoutHandler = useCallback(() => {
-    setIsLoggedIn(false);
+    setLoggedInUser(null);
   }, []);
   const value = {
-    isLoggedIn,
+    loggedInUser,
     login: loginHandler,
     logout: logoutHandler,
   };
   let routes;
-  if (isLoggedIn)
+  if (loggedInUser)
     routes = (
       <Routes>
         <Route path="/" element={<Users />} />

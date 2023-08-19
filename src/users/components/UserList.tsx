@@ -12,7 +12,7 @@ const UserList: React.FC = () => {
     {},
     { refetchOnMountOrArgChange: true, refetchOnReconnect: true }
   );
-  const [errorModalIsOpen, setErrorModalIsOpen] = useState(!!error);
+  const [errorModal, setErrorModal] = useState(!!error);
 
   let content;
   if (isFetching)
@@ -24,13 +24,13 @@ const UserList: React.FC = () => {
   else if (error)
     content = (
       <>
-        {errorModalIsOpen && (
+        {errorModal && (
           <ErrorModal
             error={
               (error as { status: number; data: { message: string } }).data
                 .message
             }
-            onClear={() => setErrorModalIsOpen(false)}
+            onClear={() => setErrorModal(false)}
           />
         )}
       </>
