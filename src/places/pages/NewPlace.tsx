@@ -13,6 +13,7 @@ import { User, useAddPlaceMutation } from "../../store";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import AuthContext from "../../shared/context/auth-context";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 
 const newPlaceInitialState = {
   inputs: {
@@ -42,10 +43,11 @@ const NewPlace: React.FC = () => {
   const submitFormHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await addPlace({
-      title: state.inputs.title.value,
-      description: state.inputs.description.value,
-      address: state.inputs.address.value,
+      title: state.inputs.title.value as string,
+      description: state.inputs.description.value as string,
+      address: state.inputs.address.value as string,
       creator: (loggedInUser as User).id,
+      image: state.inputs.image.value as File,
     });
   };
 
@@ -53,7 +55,7 @@ const NewPlace: React.FC = () => {
     setErrorModal(addPlaceResult.isError);
   }, [addPlaceResult.isError]);
 
-  if (addPlaceResult.isSuccess) navigate("/");
+  if (addPlaceResult.isSuccess) navigate(`/${loggedInUser?.id}/places`);
 
   return (
     <React.Fragment>
@@ -90,6 +92,11 @@ const NewPlace: React.FC = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorMsg="Please enter a valid address."
           onChange={changeInputHandler}
+        />
+        <ImageUpload
+          id="image"
+          onChange={changeInputHandler}
+          errorText="Please provide an image."
         />
         <Button type="submit" disabled={!state.isValid}>
           ADD PLACE

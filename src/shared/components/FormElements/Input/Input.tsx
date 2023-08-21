@@ -1,6 +1,7 @@
 import { useReducer, useEffect } from "react";
-import styles from "./Input.module.css";
 import { InputActionKind, inputReducer } from "./input-reducer";
+
+import "./Input.css";
 
 export interface InputProps {
   id: string;
@@ -76,10 +77,8 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <div
-      className={`${styles["form-control"]} ${
-        !state.isValid && state.isTouched
-          ? `${styles["form-control--invalid"]}`
-          : ""
+      className={`form-control ${
+        !state.isValid && state.isTouched ? "form-control--invalid" : ""
       }`}
     >
       <label htmlFor={id}>{label}</label>

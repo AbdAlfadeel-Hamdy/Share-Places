@@ -15,6 +15,7 @@ import styles from "./Auth.module.css";
 import AuthContext from "../../shared/context/auth-context";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 
 const Auth: React.FC = () => {
   const { login } = useContext(AuthContext);
@@ -60,18 +61,16 @@ const Auth: React.FC = () => {
       setError(null);
       let response;
       if (!isLoginMode) {
-        response = await axios.post(
-          "/users/signup",
-          {
-            name: state.inputs.name.value,
-            email: state.inputs.email.value,
-            password: state.inputs.password.value,
-          },
-          {
-            baseURL: process.env.REACT_APP_BASE_URL,
-            withCredentials: true,
-          }
-        );
+        const formData = new FormData();
+        formData.append("name", state.inputs.name.value as string);
+        formData.append("email", state.inputs.email.value as string);
+        formData.append("password", state.inputs.password.value as string);
+        formData.append("image", state.inputs.image.value as File);
+
+        response = await axios.post("/users/signup", formData, {
+          baseURL: process.env.REACT_APP_BASE_URL,
+          withCredentials: true,
+        });
       } else {
         response = await axios.post(
           "/users/login",
@@ -117,6 +116,14 @@ const Auth: React.FC = () => {
             onChange={changeInputHandler}
             errorMsg="Please enter your name."
             validators={[VALIDATOR_REQUIRE()]}
+          />
+        )}
+        {!isLoginMode && (
+          <ImageUpload
+            id="image"
+            center
+            onChange={changeInputHandler}
+            errorText="Please provide an image."
           />
         )}
         <Input

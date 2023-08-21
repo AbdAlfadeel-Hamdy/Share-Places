@@ -14,7 +14,12 @@ const UserItem: React.FC<UserItemProps> = ({ user }) => {
       <Card className={styles["user-item__content"]}>
         <Link to={`/${user.id}/places`}>
           <div className={styles["user-item__image"]}>
-            <Avatar image={user.image} alt={user.name} />
+            <Avatar
+              image={`${process.env.REACT_APP_BASE_URL?.slice(0, -4)}/${
+                user.image
+              }`}
+              alt={user.name}
+            />
           </div>
           <div className={styles["user-item__info"]}>
             <h2>{user.name}</h2>

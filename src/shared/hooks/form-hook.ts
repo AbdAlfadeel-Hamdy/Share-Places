@@ -6,12 +6,12 @@ enum FormActionKind {
 }
 
 export interface FormState {
-  inputs: { [keys: string]: { value: string; isValid: boolean } };
+  inputs: { [keys: string]: { value: string | File | null; isValid: boolean } };
   isValid: boolean;
 }
 
 interface Payload {
-  value: string;
+  value: string | File | null;
   isValid: boolean;
   inputId: string;
 }
@@ -59,7 +59,7 @@ const useForm = ({ inputs, isValid }: FormState) => {
   });
 
   const changeInputHandler = useCallback(
-    (id: string, value: string, isValid: boolean) => {
+    (id: string, value: string | File | null, isValid: boolean) => {
       dispatch({
         type: FormActionKind.INPUT_CHANGE,
         payload: {

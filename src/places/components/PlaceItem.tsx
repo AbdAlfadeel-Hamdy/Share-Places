@@ -1,14 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import { Place, useDeletePlaceMutation } from "../../store";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import Map from "./Map";
-
-import styles from "./PlaceItem.module.css";
 import AuthContext from "../../shared/context/auth-context";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+
+import styles from "./PlaceItem.module.css";
 
 interface PlaceItemProps {
   place: Place;
@@ -19,6 +20,11 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
   const [showMap, setShowMap] = useState(false);
   const [showConfirmodal, setShowDeleteModal] = useState(false);
   const [deletePlace, deletePlaceResult] = useDeletePlaceMutation();
+  const [errorModal, setErrorModal] = useState(deletePlaceResult.isError);
+
+  useEffect(() => {
+    setErrorModal(deletePlaceResult.isError);
+  }, [deletePlaceResult.isError]);
 
   const showMapHandler = () => {
     setShowMap(true);
@@ -41,6 +47,12 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
   return (
     <React.Fragment>
       {deletePlaceResult.isLoading && <LoadingSpinner asOverlay />}
+      {errorModal && (
+        <ErrorModal
+          error={(deletePlaceResult.error as any).data.message}
+          onClear={() => setErrorModal(false)}
+        />
+      )}
       <Modal
         show={showMap}
         onClose={closeMapHandler}
@@ -75,7 +87,12 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
       <li className={styles["place-item"]}>
         <Card className={styles["place-item__content"]}>
           <div className={styles["place-item__image"]}>
-            <img src={place.image} alt={place.title} />
+            <img
+              src={`${process.env.REACT_APP_BASE_URL?.slice(0, -4)}/${
+                place.image
+              }`}
+              alt={place.title}
+            />
           </div>
           <div className={styles["place-item__info"]}>
             <h2>{place.title}</h2>

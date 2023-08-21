@@ -45,8 +45,8 @@ const UpdatePlace: React.FC = () => {
     e.preventDefault();
     await updatePlace({
       id: placeId as string,
-      title: state.inputs.title.value,
-      description: state.inputs.description.value,
+      title: state.inputs.title.value as string,
+      description: state.inputs.description.value as string,
     });
   };
   if (updatePlaceResult.isSuccess) navigate(`/${loggedInUser?.id}/places`);
