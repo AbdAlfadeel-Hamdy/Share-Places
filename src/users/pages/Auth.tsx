@@ -85,8 +85,8 @@ const Auth: React.FC = () => {
         );
       }
       setIsLoading(false);
-      const { user } = response.data;
-      login(user);
+      const { userId, token } = response.data;
+      login(userId, token);
     } catch (err: Error | AxiosError | unknown) {
       setIsLoading(false);
       if (axios.isAxiosError(err))

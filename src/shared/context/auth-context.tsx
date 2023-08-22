@@ -1,15 +1,16 @@
 import { createContext } from "react";
-import { User } from "../../store";
 
 interface AuthContextProps {
-  loggedInUser: null | User;
-  login: (user: User) => void;
+  token: string | null;
+  userId: string | null;
+  login: (userId: string, token: string) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps>({
-  loggedInUser: null,
-  login: (user: User) => {},
+  token: null,
+  userId: null,
+  login: (userId, token) => {},
   logout: () => {},
 });
 

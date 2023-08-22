@@ -34,7 +34,7 @@ const UpdatePlace: React.FC = () => {
     },
     isValid: false,
   });
-  const { loggedInUser } = useContext(AuthContext);
+  const { userId, token } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,9 +47,10 @@ const UpdatePlace: React.FC = () => {
       id: placeId as string,
       title: state.inputs.title.value as string,
       description: state.inputs.description.value as string,
+      token: token as string,
     });
   };
-  if (updatePlaceResult.isSuccess) navigate(`/${loggedInUser?.id}/places`);
+  if (updatePlaceResult.isSuccess) navigate(`/${userId}/places`);
 
   const clearErrorHandler = () => {
     setErrorModal(false);

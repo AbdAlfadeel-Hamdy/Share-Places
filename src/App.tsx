@@ -6,25 +6,74 @@ import UserPlaces from "./places/pages/UserPlaces";
 import UpdatePlace from "./places/pages/UpdatePlace";
 import Auth from "./users/pages/Auth";
 import AuthContext from "./shared/context/auth-context";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Provider } from "react-redux";
-import { User, store } from "./store";
+import { store } from "./store";
 
 const App: React.FC = () => {
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
-  const loginHandler = useCallback((user: User) => {
-    setLoggedInUser(user);
-  }, []);
-  const logoutHandler = useCallback(() => {
-    setLoggedInUser(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [expirationTokenDate, setExpirationTokenDate] = useState<Date | null>(
+    null
+  );
+  const [userId, setUserId] = useState<string | null>(null);
+  const login = useCallback(
+    (userId: string, token: string, expirationTime: Date | null = null) => {
+      setUserId(userId);
+      setToken(token);
+
+      expirationTime =
+        expirationTime || new Date(new Date().getTime() + 1000 * 60 * 60);
+
+      setExpirationTokenDate(expirationTime);
+
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          userId,
+          token,
+          expirationTime: expirationTime?.toISOString(),
+        })
+      );
+    },
+    []
+  );
+  const logout = useCallback(() => {
+    setUserId(null);
+    setToken(null);
+    setExpirationTokenDate(null);
+    localStorage.removeItem("userData");
   }, []);
   const value = {
-    loggedInUser,
-    login: loginHandler,
-    logout: logoutHandler,
+    token,
+    userId,
+    login,
+    logout,
   };
+
+  useEffect(() => {
+    let userData;
+    const userDataItem = localStorage.getItem("userData");
+    if (userDataItem) userData = JSON.parse(userDataItem);
+    if (
+      userData?.token &&
+      userData.expirationTime &&
+      new Date() < new Date(userData.expirationTime)
+    )
+      login(userData.userId, userData.token, new Date(userData.expirationTime));
+  }, [login]);
+
+  useEffect(() => {
+    let timer;
+    if (token && expirationTokenDate)
+      timer = setTimeout(
+        logout,
+        expirationTokenDate.getTime() - new Date().getTime()
+      );
+    else clearTimeout(timer);
+  }, [token, expirationTokenDate, logout]);
+
   let routes;
-  if (loggedInUser)
+  if (token)
     routes = (
       <Routes>
         <Route path="/" element={<Users />} />

@@ -6,28 +6,28 @@ import AuthContext from "../../context/auth-context";
 import styles from "./NavLinks.module.css";
 
 const NavLinks: React.FC = () => {
-  const { loggedInUser, logout } = useContext(AuthContext);
+  const { userId, token, logout } = useContext(AuthContext);
   return (
     <ul className={styles["nav-links"]}>
       <li>
         <NavLink to="/">ALL USERS</NavLink>
       </li>
-      {loggedInUser && (
+      {token && (
         <li>
-          <NavLink to={`/${loggedInUser.id}/places`}>MY PLACES</NavLink>
+          <NavLink to={`/${userId}/places`}>MY PLACES</NavLink>
         </li>
       )}
-      {loggedInUser && (
+      {token && (
         <li>
           <NavLink to="/places/new">ADD PLACE</NavLink>
         </li>
       )}
-      {!loggedInUser && (
+      {!token && (
         <li>
           <NavLink to="/auth">AUTHENTICATE</NavLink>
         </li>
       )}
-      {loggedInUser && (
+      {token && (
         <li>
           <button onClick={logout}>LOGOUT</button>
         </li>

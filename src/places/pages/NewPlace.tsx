@@ -9,7 +9,7 @@ import {
 } from "../../shared/utils/validators";
 import Button from "../../shared/components/FormElements/Button";
 import styles from "./PlaceForm.module.css";
-import { User, useAddPlaceMutation } from "../../store";
+import { useAddPlaceMutation } from "../../store";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import AuthContext from "../../shared/context/auth-context";
@@ -35,7 +35,7 @@ const newPlaceInitialState = {
 
 const NewPlace: React.FC = () => {
   const { state, changeInputHandler } = useForm(newPlaceInitialState);
-  const { loggedInUser } = useContext(AuthContext);
+  const { userId, token } = useContext(AuthContext);
   const [addPlace, addPlaceResult] = useAddPlaceMutation();
   const [errorModal, setErrorModal] = useState(addPlaceResult.isError);
   const navigate = useNavigate();
@@ -46,8 +46,9 @@ const NewPlace: React.FC = () => {
       title: state.inputs.title.value as string,
       description: state.inputs.description.value as string,
       address: state.inputs.address.value as string,
-      creator: (loggedInUser as User).id,
+      creator: userId as string,
       image: state.inputs.image.value as File,
+      token: token as string,
     });
   };
 
@@ -55,7 +56,7 @@ const NewPlace: React.FC = () => {
     setErrorModal(addPlaceResult.isError);
   }, [addPlaceResult.isError]);
 
-  if (addPlaceResult.isSuccess) navigate(`/${loggedInUser?.id}/places`);
+  if (addPlaceResult.isSuccess) navigate(`/${userId}/places`);
 
   return (
     <React.Fragment>

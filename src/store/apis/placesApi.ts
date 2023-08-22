@@ -51,6 +51,7 @@ export const placesApi = createApi({
           address: string;
           creator: string;
           image: File;
+          token: string;
         }) => {
           const formData = new FormData();
           formData.append("title", place.title);
@@ -62,16 +63,22 @@ export const placesApi = createApi({
             method: "POST",
             url: `/places`,
             body: formData,
+            headers: {
+              Authorization: `Bearer ${place.token}`,
+            },
           };
         },
       }),
       // Delete Place
       deletePlace: builder.mutation({
         invalidatesTags: (result, error) => (error ? [] : ["Place"]),
-        query: (placeId: string) => {
+        query: ({ placeId, token }: { placeId: string; token: string }) => {
           return {
             method: "DELETE",
             url: `/places/${placeId}`,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           };
         },
       }),
@@ -82,10 +89,12 @@ export const placesApi = createApi({
           id,
           title,
           description,
+          token,
         }: {
           id: string;
           title: string;
           description: string;
+          token: string;
         }) => {
           return {
             method: "PATCH",
@@ -93,6 +102,9 @@ export const placesApi = createApi({
             body: {
               title,
               description,
+            },
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
           };
         },

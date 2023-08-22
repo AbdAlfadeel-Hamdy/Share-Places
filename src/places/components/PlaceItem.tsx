@@ -16,7 +16,7 @@ interface PlaceItemProps {
 }
 
 const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
-  const { loggedInUser } = useContext(AuthContext);
+  const { userId, token } = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmodal, setShowDeleteModal] = useState(false);
   const [deletePlace, deletePlaceResult] = useDeletePlaceMutation();
@@ -41,7 +41,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
   };
   const confirmDeleteHandler = async () => {
     setShowDeleteModal(false);
-    await deletePlace(place.id);
+    await deletePlace({ placeId: place.id, token: token as string });
   };
 
   return (
@@ -103,10 +103,10 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
             <Button inverse onClick={showMapHandler}>
               VIEW ON MAP
             </Button>
-            {loggedInUser?.id === place.creator && (
+            {userId === place.creator && (
               <Button to={`/places/${place.id}`}>EDIT</Button>
             )}
-            {loggedInUser?.id === place.creator && (
+            {userId === place.creator && (
               <Button danger onClick={showdeleteWarninghandler}>
                 DELETE
               </Button>
