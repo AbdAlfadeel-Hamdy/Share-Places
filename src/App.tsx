@@ -1,14 +1,17 @@
+import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Users from "./users/pages/Users";
-import NewPlace from "./places/pages/NewPlace";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
-import UserPlaces from "./places/pages/UserPlaces";
-import UpdatePlace from "./places/pages/UpdatePlace";
-import Auth from "./users/pages/Auth";
 import AuthContext from "./shared/context/auth-context";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import useAuth from "./shared/hooks/auth-hook";
+import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
+
+const Users = React.lazy(() => import("./users/pages/Users"));
+const NewPlace = React.lazy(() => import("./places/pages/NewPlace"));
+const UserPlaces = React.lazy(() => import("./places/pages/UserPlaces"));
+const UpdatePlace = React.lazy(() => import("./places/pages/UpdatePlace"));
+const Auth = React.lazy(() => import("./users/pages/Auth"));
 
 const App: React.FC = () => {
   const { token, value } = useAuth();
@@ -37,7 +40,15 @@ const App: React.FC = () => {
       <AuthContext.Provider value={value}>
         <BrowserRouter>
           <MainNavigation />
-          <main>{routes}</main>
+          <Suspense
+            fallback={
+              <div className="center">
+                <LoadingSpinner />
+              </div>
+            }
+          >
+            <main>{routes}</main>
+          </Suspense>
         </BrowserRouter>
       </AuthContext.Provider>
     </Provider>

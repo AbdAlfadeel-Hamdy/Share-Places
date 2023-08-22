@@ -12,7 +12,6 @@ interface MapProps {
 
 const Map: React.FC<MapProps> = ({ coordinates, zoom }) => {
   const { lat, lng } = coordinates;
-  console.log(lat, lng, zoom);
   return (
     <MapContainer
       center={[lat, lng]}
