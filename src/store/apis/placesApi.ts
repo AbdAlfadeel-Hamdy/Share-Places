@@ -49,7 +49,6 @@ export const placesApi = createApi({
           title: string;
           description: string;
           address: string;
-          creator: string;
           image: File;
           token: string;
         }) => {
@@ -57,7 +56,6 @@ export const placesApi = createApi({
           formData.append("title", place.title);
           formData.append("description", place.description);
           formData.append("address", place.address);
-          formData.append("creator", place.creator);
           formData.append("image", place.image);
           return {
             method: "POST",

@@ -46,7 +46,6 @@ const NewPlace: React.FC = () => {
       title: state.inputs.title.value as string,
       description: state.inputs.description.value as string,
       address: state.inputs.address.value as string,
-      creator: userId as string,
       image: state.inputs.image.value as File,
       token: token as string,
     });
