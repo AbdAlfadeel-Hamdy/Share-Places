@@ -1,21 +1,21 @@
-import { useContext, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { useContext, useState } from 'react';
+import axios, { AxiosError } from 'axios';
 
-import Button from "../../shared/components/FormElements/Button";
-import Input from "../../shared/components/FormElements/Input/Input";
-import Card from "../../shared/components/UIElements/Card";
-import useForm from "../../shared/hooks/form-hook";
+import Button from '../../shared/components/FormElements/Button';
+import Input from '../../shared/components/FormElements/Input/Input';
+import Card from '../../shared/components/UIElements/Card';
+import useForm from '../../shared/hooks/form-hook';
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
-} from "../../shared/utils/validators";
+} from '../../shared/utils/validators';
 
-import styles from "./Auth.module.css";
-import AuthContext from "../../shared/context/auth-context";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import ImageUpload from "../../shared/components/FormElements/ImageUpload";
+import styles from './Auth.module.css';
+import AuthContext from '../../shared/context/auth-context';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import ImageUpload from '../../shared/components/FormElements/ImageUpload';
 
 const Auth: React.FC = () => {
   const { login } = useContext(AuthContext);
@@ -23,11 +23,11 @@ const Auth: React.FC = () => {
   const { state, changeInputHandler, setFormData } = useForm({
     inputs: {
       email: {
-        value: "",
+        value: '',
         isValid: false,
       },
       password: {
-        value: "",
+        value: '',
         isValid: false,
       },
     },
@@ -51,7 +51,7 @@ const Auth: React.FC = () => {
         isValid: false,
       });
     }
-    setIsLoginMode((prevMode) => !prevMode);
+    setIsLoginMode(prevMode => !prevMode);
   };
 
   const submitFormHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -62,18 +62,18 @@ const Auth: React.FC = () => {
       let response;
       if (!isLoginMode) {
         const formData = new FormData();
-        formData.append("name", state.inputs.name.value as string);
-        formData.append("email", state.inputs.email.value as string);
-        formData.append("password", state.inputs.password.value as string);
-        formData.append("image", state.inputs.image.value as File);
+        formData.append('name', state.inputs.name.value as string);
+        formData.append('email', state.inputs.email.value as string);
+        formData.append('password', state.inputs.password.value as string);
+        formData.append('image', state.inputs.image.value as File);
 
-        response = await axios.post("/users/signup", formData, {
+        response = await axios.post('/users/signup', formData, {
           baseURL: process.env.REACT_APP_BASE_URL,
           withCredentials: true,
         });
       } else {
         response = await axios.post(
-          "/users/login",
+          '/users/login',
           {
             email: state.inputs.email.value,
             password: state.inputs.password.value,
@@ -87,12 +87,12 @@ const Auth: React.FC = () => {
       setIsLoading(false);
       const { userId, token } = response.data;
       login(userId, token);
-    } catch (err: Error | AxiosError | unknown) {
+    } catch (err) {
       setIsLoading(false);
-      if (axios.isAxiosError(err))
-        setError(err.response?.data.message || "Something went wrong!");
+      if (err instanceof AxiosError)
+        setError(err.response?.data.message || 'Something went wrong!');
       else if (err instanceof Error)
-        setError(err.message || "Something went wrong!");
+        setError(err.message || 'Something went wrong!');
     }
   };
 
@@ -109,47 +109,47 @@ const Auth: React.FC = () => {
       <form onSubmit={submitFormHandler}>
         {!isLoginMode && (
           <Input
-            id="name"
-            label="Your Name"
-            elementType="input"
-            type="text"
+            id='name'
+            label='Your Name'
+            elementType='input'
+            type='text'
             onChange={changeInputHandler}
-            errorMsg="Please enter your name."
+            errorMsg='Please enter your name.'
             validators={[VALIDATOR_REQUIRE()]}
           />
         )}
         {!isLoginMode && (
           <ImageUpload
-            id="image"
+            id='image'
             center
             onChange={changeInputHandler}
-            errorText="Please provide an image."
+            errorText='Please provide an image.'
           />
         )}
         <Input
-          id="email"
-          label="E-Mail"
-          elementType="input"
-          type="email"
+          id='email'
+          label='E-Mail'
+          elementType='input'
+          type='email'
           onChange={changeInputHandler}
-          errorMsg="Please enter a valid email address."
+          errorMsg='Please enter a valid email address.'
           validators={[VALIDATOR_EMAIL()]}
         />
         <Input
-          id="password"
-          label="Password"
-          elementType="input"
-          type="password"
+          id='password'
+          label='Password'
+          elementType='input'
+          type='password'
           onChange={changeInputHandler}
-          errorMsg="Please enter a valid password (at least 6 characters)."
+          errorMsg='Please enter a valid password (at least 6 characters).'
           validators={[VALIDATOR_MINLENGTH(6)]}
         />
-        <Button type="submit" disabled={!state.isValid}>
-          {isLoginMode ? "LOGIN" : "SIGNUP"}
+        <Button type='submit' disabled={!state.isValid}>
+          {isLoginMode ? 'LOGIN' : 'SIGNUP'}
         </Button>
       </form>
       <Button inverse onClick={switchModeHandler}>
-        SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
+        SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
       </Button>
     </Card>
   );
