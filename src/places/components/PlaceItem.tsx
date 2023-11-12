@@ -22,8 +22,6 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
   const [deletePlace, deletePlaceResult] = useDeletePlaceMutation();
   const [errorModal, setErrorModal] = useState(deletePlaceResult.isError);
 
-  console.log(`${process.env.REACT_APP_BASE_URL?.slice(0, -7)}/${place.image}`);
-
   useEffect(() => {
     setErrorModal(deletePlaceResult.isError);
   }, [deletePlaceResult.isError]);

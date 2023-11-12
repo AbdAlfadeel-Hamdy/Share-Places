@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export interface User {
   id: string;
@@ -8,18 +8,18 @@ export interface User {
 }
 
 export const usersApi = createApi({
-  reducerPath: "users",
+  reducerPath: 'users',
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_BASE_URL,
-    credentials: "include",
+    credentials: 'include',
   }),
   endpoints(builder) {
     return {
       fetchUsers: builder.query({
         query: () => {
           return {
-            method: "GET",
-            url: "/users",
+            method: 'GET',
+            url: '/users',
           };
         },
       }),
