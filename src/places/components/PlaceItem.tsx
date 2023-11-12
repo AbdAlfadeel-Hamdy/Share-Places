@@ -1,15 +1,15 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from 'react';
 
-import { Place, useDeletePlaceMutation } from "../../store";
-import Card from "../../shared/components/UIElements/Card";
-import Button from "../../shared/components/FormElements/Button";
-import Modal from "../../shared/components/UIElements/Modal";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import Map from "./Map";
-import AuthContext from "../../shared/context/auth-context";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import { Place, useDeletePlaceMutation } from '../../store';
+import Card from '../../shared/components/UIElements/Card';
+import Button from '../../shared/components/FormElements/Button';
+import Modal from '../../shared/components/UIElements/Modal';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import Map from './Map';
+import AuthContext from '../../shared/context/auth-context';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 
-import styles from "./PlaceItem.module.css";
+import styles from './PlaceItem.module.css';
 
 interface PlaceItemProps {
   place: Place;
@@ -18,9 +18,11 @@ interface PlaceItemProps {
 const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
   const { userId, token } = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
-  const [showConfirmodal, setShowDeleteModal] = useState(false);
+  const [showConfirmModal, setShowDeleteModal] = useState(false);
   const [deletePlace, deletePlaceResult] = useDeletePlaceMutation();
   const [errorModal, setErrorModal] = useState(deletePlaceResult.isError);
+
+  console.log(`${process.env.REACT_APP_BASE_URL?.slice(0, -7)}/${place.image}`);
 
   useEffect(() => {
     setErrorModal(deletePlaceResult.isError);
@@ -33,7 +35,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
     setShowMap(false);
   };
 
-  const showdeleteWarninghandler = () => {
+  const showDeleteWarningHandler = () => {
     setShowDeleteModal(true);
   };
   const cancelDeleteHandler = () => {
@@ -57,18 +59,18 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
         show={showMap}
         onClose={closeMapHandler}
         header={place.address}
-        contentClass={styles["place-item__modal-content"]}
+        contentClass={styles['place-item__modal-content']}
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
-        footerClass={styles["place-item__modal-actions"]}
+        footerClass={styles['place-item__modal-actions']}
       >
-        <div className={styles["map-container"]}>
+        <div className={styles['map-container']}>
           <Map coordinates={place.location} zoom={7} />
         </div>
       </Modal>
       <Modal
-        show={showConfirmodal}
+        show={showConfirmModal}
         onClose={cancelDeleteHandler}
-        header={"Are you sure?"}
+        header={'Are you sure?'}
         footer={
           <>
             <Button inverse onClick={cancelDeleteHandler}>
@@ -79,27 +81,27 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
             </Button>
           </>
         }
-        footerClass={styles["place-item__modal-actions"]}
+        footerClass={styles['place-item__modal-actions']}
       >
         Do you want to proceed and delete this place? Please note that it can't
         be undone thereafter.
       </Modal>
-      <li className={styles["place-item"]}>
-        <Card className={styles["place-item__content"]}>
-          <div className={styles["place-item__image"]}>
+      <li className={styles['place-item']}>
+        <Card className={styles['place-item__content']}>
+          <div className={styles['place-item__image']}>
             <img
-              src={`${process.env.REACT_APP_BASE_URL?.slice(0, -4)}/${
+              src={`${process.env.REACT_APP_BASE_URL?.slice(0, -7)}/${
                 place.image
               }`}
               alt={place.title}
             />
           </div>
-          <div className={styles["place-item__info"]}>
+          <div className={styles['place-item__info']}>
             <h2>{place.title}</h2>
             <h3>{place.address}</h3>
             <p>{place.description}</p>
           </div>
-          <div className={styles["place-item__actions"]}>
+          <div className={styles['place-item__actions']}>
             <Button inverse onClick={showMapHandler}>
               VIEW ON MAP
             </Button>
@@ -107,7 +109,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
               <Button to={`/places/${place.id}`}>EDIT</Button>
             )}
             {userId === place.creator && (
-              <Button danger onClick={showdeleteWarninghandler}>
+              <Button danger onClick={showDeleteWarningHandler}>
                 DELETE
               </Button>
             )}
