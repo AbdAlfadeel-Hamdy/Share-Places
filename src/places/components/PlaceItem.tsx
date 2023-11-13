@@ -87,12 +87,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
       <li className={styles['place-item']}>
         <Card className={styles['place-item__content']}>
           <div className={styles['place-item__image']}>
-            <img
-              src={`${process.env.REACT_APP_BASE_URL?.slice(0, -7)}/${
-                place.image
-              }`}
-              alt={place.title}
-            />
+            <img src={place.image} alt={place.title} />
           </div>
           <div className={styles['place-item__info']}>
             <h2>{place.title}</h2>
